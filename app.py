@@ -1,45 +1,21 @@
 import pickle
 import numpy as np
-from flask import Flask, request, jsonify
+import streamlit as st
 
-app = Flask(__name__)
+# Load model
+with open("model.pkl", "rb") as file:
+    model = pickle.load(file)
 
-# Load model (Suppressing print statements for brevity)
-try:
-    with open('model.pkl', 'rb') as file:
-        model = pickle.load(file)
-except:
-    model = None # Set model to None if loading fails
+st.title("Height Prediction App")
 
-# Feature order is mandatory: ['weight', 'age', 'shoe_size', 'arm_length', 'leg_length']
-REQUIRED_FEATURES = ['weight', 'age', 'shoe_size', 'arm_length', 'leg_length']
+# Input widgets
+weight = st.number_input("Weight")
+age = st.number_input("Age")
+shoe_size = st.number_input("Shoe Size")
+arm_length = st.number_input("Arm Length")
+leg_length = st.number_input("Leg Length")
 
-@app.route('/')
-def home():
-    return "Height Prediction API: POST data to /predict."
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    if model is None:
-        return jsonify({'error': 'Model failed to load.'}), 500
-
-    try:
-        data = request.get_json(force=True)
-        input_data = [data.get(f) for f in REQUIRED_FEATURES]
-
-        # Validation check for numeric data
-        if any(item is None or not isinstance(item, (int, float)) for item in input_data):
-            return jsonify({'error': 'Invalid or missing numeric data.'}), 400
-
-        # Prediction logic
-        final_features = np.array([input_data])
-        prediction = model.predict(final_features)
-        output = round(prediction[0], 2)
-
-        return jsonify({'predicted_height': output, 'unit': 'units'})
-
-    except Exception as e:
-        return jsonify({'error': f'Internal error: {str(e)}'}), 500
-
-if __name__ == "__main__":
-    app.run(debug=False)
+if st.button("Predict"):
+    features = np.array([[weight, age, shoe_size, arm_length, leg_length]])
+    prediction = model.predict(features)
+    st.write(f"Predicted Height: {round(prediction[0],2)} units")
