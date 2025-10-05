@@ -27,11 +27,11 @@ except Exception as e:
     st.stop()
 
 # Input widgets
-weight = st.number_input("Weight (kg)", min_value=0.0, step=0.1)
-age = st.number_input("Age (years)", min_value=0, step=1)
-shoe_size = st.number_input("Shoe Size", min_value=0.0, step=0.1)
-arm_length = st.number_input("Arm Length (cm)", min_value=0.0, step=0.1)
-leg_length = st.number_input("Leg Length (cm)", min_value=0.0, step=0.1)
+weight = st.number_input("⚖️ Weight (kg)", min_value=0.0, step=0.1)
+age = st.number_input("🎂 Age (years)", min_value=0, step=1)
+shoe_size = st.number_input("👟 Shoe Size", min_value=0.0, step=0.1)
+arm_length = st.number_input("💪 Arm Length (cm)", min_value=0.0, step=0.1)
+leg_length = st.number_input("🦵 Leg Length (cm)", min_value=0.0, step=0.1)
 
 # Prediction button
 if st.button("Predict Height"):
@@ -41,3 +41,4 @@ if st.button("Predict Height"):
         st.success(f"Predicted Height: {round(prediction[0],2)} units")
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
